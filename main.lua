@@ -28,6 +28,7 @@ local function grid(subdivisions)
 end
 
 function lovr.load()
+  print(lovr.headset.getDriver())
   local skyColor = {0.208, 0.208, 0.275}
   lovr.graphics.setBackgroundColor(skyColor)
   -- lovr.graphics.setBlendMode()
@@ -77,7 +78,7 @@ function lovr.draw()
   shader:send("uTime", lovr.timer.getTime())
   lovr.graphics.print("FPS "..lovr.timer.getFPS(), 0, 1.8, -1)
   -- model
-  terrainScene.draw()
+  -- terrainScene.draw()
   lovr.graphics.setShader(hm_shader)
   hm_model:draw(0,0,-4,0.0125)
   lovr.graphics.setColor(0.0, 0.3, 0.763)
