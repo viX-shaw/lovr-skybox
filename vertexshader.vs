@@ -10,6 +10,7 @@ out vec3 FragmentPos;
 
 vec3 gerstnerwave (vec4 wave, vec3 p, inout vec3 tangent, inout vec3 binormal) {
   float steepness = wave.z;
+  // steepness = steepness * (0.25 - p.x/3);
   float wavelength = wave.w;
   float k = 2.0 * 3.142857 / wavelength;
   float c = sqrt(9.8 / k);
@@ -74,14 +75,14 @@ vec4 position(mat4 projection, mat4 transform, vec4 vertex) {
   float wvlength = 0.01*sin(uTime*0.15) + 0.15;
   float wvSteep = 0.05*sin(uTime*0.15 + 1.57) + 0.2;
 
-  vec4 wave1 = vec4(1, 1, wvSteep, wvlength);
-  vec4 wave2 = vec4(1,0.6,wvSteep,wvlength/1.81); //make it a uniform
-  vec4 wave3 = vec4(1,1.3,wvSteep,wvlength/3.44); //make it a uniform
-  vec4 wave4 = vec4(1,0.2,wvSteep,sqrt(sqrt(0.6))); //make it a uniform
+  vec4 wave1 = vec4(1.0, 1.0, wvSteep, wvlength);
+  vec4 wave2 = vec4(1.0,0.6,wvSteep,wvlength/1.81); //make it a uniform
+  vec4 wave3 = vec4(1.0,1.3,wvSteep,wvlength/3.44); //make it a uniform
+  // vec4 wave4 = vec4(-1,-0.4,wvSteep,wvlength/2.0); //make it a uniform
 
 
-  vec3 tangent = vec3(1,0,0);
-  vec3 binormal = vec3(0,0,1);
+  vec3 tangent = vec3(1.0,0.0,0.0);
+  vec3 binormal = vec3(0.0,0.0,1.0);
   vec3 gridpoint = vertex.xyz;
   vec3 p = vertex.xyz;
 
