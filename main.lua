@@ -37,32 +37,43 @@ function lovr.load()
 
   shader = lovr.graphics.newShader(unpack(shaderCode))
   shader:send('fogColor', { lovr.math.gammaToLinear(unpack(skyColor)) })
-  shader:send('ambience', { 0.2, 0.05, 0.05, 1.0 })
+  shader:send('ambience', { 0.12, 0.28, 0.15, 1.0 })
   -- shader:send('ambience', { 0.95, 0.3, 0.0, 1.0 })
-  shader:send('liteColor', {0.95, 0.2, 0.0, 1.0})
-  shader:send('lightPos', {-3.0, -0.2, 10})
-  shader:send('specularStrength', 0.6)
-  shader:send('metallic', 7.0)
+  shader:send('liteColor', {1.0, 1.0, 1.0, 1.0})
+  -- shader:send('lightPos', {-30.0, -2.0, 50})
+  shader:send('lightPos', {0.0, -105.0, 105.0})
+  shader:send('specularStrength', 1.0)
+  shader:send('metallic', 10.0)
   shader:send('viewPos', {0.0, 0.0, 0.0})
+  shader:send('viewPoss', {0.0, 0.0, 0.0})
+
   shader:send('wvlength', 0.1)
   shader:send('wvSteep', 0.1)
-  
+  ocean_insts = 1
+  shader:send('ocean_insts', math.floor(math.sqrt(ocean_insts)))
   ocean = grid(100)
-  shader:send('material', lovr.graphics.newTexture('water-surface-2.jpg'))
+  -- shader:send('material', lovr.graphics.newTexture('water-surface-2.jpg'))
   skybox = lovr.graphics.newTexture(
-    "sky-2.png",
+    "OBJ/lakeside.jpg",
     { mipmaps = false })
-
+  -- shader:send('material', skybox)
+    
+  envMap = lovr.graphics.newTexture("OBJ/lakeside2.jpg", {mipmaps=false})
   terrainScene.load()
+  shader:send('lovrEnvTexture', envMap)
+
 
   -- Models
-  hm_model = lovr.graphics.newModel('OBJ/F23.glb')
-  hm_shader = lovr.graphics.newShader('unlit')
+  hm_model = lovr.graphics.newModel('OBJ/casc_anim.glb')
+  -- hm_model = lovr.graphics.newModel('OBJ/F23.glb')
+  hm_shader = lovr.graphics.newShader('standard', {flags={animated=true}})
+  hm_shader:send('lovrExposure', 2)
+  hm_shader:send('lovrEnvironmentMap', skybox)
   -- local animCounts = 
-  -- for i = 1, hm_model:getAnimationCount() do
-  -- print(hm_model:getAnimationCount())
-  -- print(hm_model:getAnimationName(1), hm_model:getAnimationDuration(1))
-  -- end
+  for i = 1, hm_model:getAnimationCount() do
+  print(hm_model:getAnimationCount())
+  print(hm_model:getAnimationName(1), hm_model:getAnimationDuration(1))
+  end
     -- water_mat = lovr.graphics.newMaterial(lovr.graphics.newTexture('water-surface-2.jpg'))
     -- terrain:setMaterial(water_mat)
     --   local offset = lovr.math.noise(0, 0) -- ensure zero height at origin
@@ -79,8 +90,8 @@ function lovr.draw()
   lovr.graphics.print("FPS "..lovr.timer.getFPS(), 0, 1.8, -1)
   -- model
   -- terrainScene.draw()
-  lovr.graphics.setShader(hm_shader)
-  hm_model:draw(0,0,-4,0.0125)
+  --lovr.graphics.setShader()
+  -- For Cascadeur models , rotate 90 x-axis and scale to 100
   lovr.graphics.setColor(0.0, 0.3, 0.763)
   lovr.graphics.cube('fill', -2.0, -2.0, -1.0, 2)
   lovr.graphics.setColor(1.0, 1.0, 1.0, 1.0)
@@ -89,8 +100,11 @@ function lovr.draw()
   lovr.graphics.scale(50)
   lovr.graphics.rotate(math.pi/2, 1, 0, 0)
   -- lovr.graphics.setWireframe(true)
-  ocean:draw()
+  ocean:draw(lovr.math.mat4(), ocean_insts)
   lovr.graphics.pop()
+  lovr.graphics.setShader(hm_shader)
+  -- hm_model:draw(0,0,-4,0.0125)
+  hm_model:draw(0,0,-4,1.0) --, -90*(2*3.14)/360, 1,0,0)
   lovr.graphics.setShader()
 
   -- lovr.graphics.setColor(0.388, 0.302, 0.412, 0.1)
@@ -99,11 +113,15 @@ function lovr.draw()
 end
 
 function lovr.update(dT)
+  hm_model:animate(1, lovr.timer.getTime())
   if lovr.headset then 
       hx, hy, hz = lovr.headset.getPosition()
       shader:send('viewPos', { hx, hy, hz } )
+      shader:send('viewPoss', { hx, hy, hz } )
+      -- print(lovr.headset.getPosition())
+
       -- shader:send('wvSteep', 0.01*lovr.timer.getTime()%0.2 + 0.07)
-      -- shader:send('lightPos', {-3.0, -(lovr.timer.getTime() % 5.0), 0.5})
+      -- shader:send('lightPos', {-3.0, -(lovr.timer.getTime() % 15.0), 5.0})
 
   end
 end

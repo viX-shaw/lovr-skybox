@@ -1,0 +1,26 @@
+
+LOVR Notes:
+
+Possible to get Model:getNodePose in local space - Easy for comparison and manipulation
+
+lovr.math.quat has functions for smooth rotation transations e,g slerp, check it out
+
+
+Image Based Lighting
+https://learnopengl.com/Advanced-OpenGL/Cubemaps
+
+
+portal magic for vr developer gems - page 458
+
+https://github.com/bmild/nerf - Photogrammetry with NN
+
+
+
+FOr water:
+Add foam - white color to vertexes that are above some vertical threshold
+           also add when close to camera
+		   
+		   The wave shape can be made to not cover the entire width of the ocean
+		   
+Did that, but didn't love the feel - maybe cause it wasn't synced with the wave, maybe needs mulitple noises on diff scales 
+									Also, the lighting in VR was not right
