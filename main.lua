@@ -59,8 +59,10 @@ function lovr.load()
   -- shader:send('material', skybox)
     
   envMap = lovr.graphics.newTexture("OBJ/lakeside2.jpg", {mipmaps=false})
+  nMap = lovr.graphics.newTexture("wave.png")
   terrainScene.load()
   shader:send('lovrEnvTexture', envMap)
+  shader:send('nMap', nMap)
 
 
   -- Models

@@ -24,3 +24,8 @@ Add foam - white color to vertexes that are above some vertical threshold
 		   
 Did that, but didn't love the feel - maybe cause it wasn't synced with the wave, maybe needs mulitple noises on diff scales 
 									Also, the lighting in VR was not right
+									
+									
+SO Environment map is working nice but expensive(no precalculated maps).
+The plan to add detail to our water with normal maps needs extra study, so that when add the normals we don't loose the calculated normals
+after applying the gerstner waves formula.

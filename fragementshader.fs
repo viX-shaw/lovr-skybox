@@ -77,12 +77,13 @@ vec4 color(vec4 graphicsColor, sampler2D image, vec2 uv)
 
   //diffuse
   vec3 norm = normalize(Normal);
-  vec3 lightDir = normalize(normalize(lightPos) - FragmentPos);
+  // vec3 lightDir = normalize(normalize(lightPos) - FragmentPos);
+  vec3 lightDir = normalize(lightPos - fragmentView.xyz);
   float diff = max(dot(norm, lightDir), 0.0);
   vec4 diffuse = diff * liteColor;
   
   //specular
-  vec3 viewDir = normalize(viewPos - FragmentPos);
+  vec3 viewDir = normalize(viewPos - fragmentView.xyz);
   vec3 reflectDir = reflect(-lightDir, norm);
   vec3 halfVec = normalize(viewDir+reflectDir);
   // float spec = pow(max(dot(viewDir, reflectDir), 0.0), metallic);
@@ -105,7 +106,7 @@ vec4 color(vec4 graphicsColor, sampler2D image, vec2 uv)
   // specular *= attenuation;
   // vec2 envPos = vec2(length(vN.yz), vN.x);
   vec2 uv_new = SampleSphericalMap(normalize(vN));
-  vec4 fragcol = baseColor + ( diffuse + specular * 0.5* texture(lovrEnvTexture, uv_new));
+  vec4 fragcol = baseColor + ( diffuse + specular * texture(lovrEnvTexture, uv_new));
   // vec4 fragcol = baseColor + ( diffuse + specular * 0.2* texture(lovrEnvironmentTexture, vec2(vN.x, -vN.y)));
   // vec4 fragcol = 0.2* texture(lovrEnvironmentTexture, vec2(vN.x, -vN.y));
   // vec4 fragcol = baseColor * (ambience + diffuse + specular);
@@ -123,6 +124,11 @@ vec4 color(vec4 graphicsColor, sampler2D image, vec2 uv)
   //   float voro = noise(48.0*(sin(FragmentPos.xy - 0.1 * uTime)) , 1.0, 1.0);
   //   fragcol.xyz = (voro>0.5 || voro<0.45)?fragcol.xyz:fragcol.xyz + vec3(0.5)*(voro);//*abs(sin(voro));
   // }
-  return vec4(fragcol.xyz, 1.0);
+
+  float seethrough = length(fragmentView.xz)/6.0;
+  return vec4(fragcol.xyz, seethrough);
+  // return vec4(seethrough, 0, 0, 1.0);
+  
+  // return vec4(fragcol.xyz, 1.0);
   // return fragcol;
 }

@@ -2,6 +2,8 @@
 out vec2 pos;
 out vec3 Normal;
 
+uniform sampler2D nMap;
+
 uniform float uTime;
 uniform int ocean_insts;
 
@@ -47,7 +49,8 @@ vec3 gerstnerwave (vec4 wave, vec3 p, inout vec3 tangent, inout vec3 binormal, f
 vec4 position(mat4 projection, mat4 transform, vec4 vertex) {
 
   // End of uv calc.
-
+  // vec3 bump = normalize(texture(nMap, vertex.xy).xyz);
+  // vertex.xyz += bump/50;
   // // float amplitude = 0.1;
   // float wavelength = 2.0;
   // float steepness = 0.5;
@@ -102,7 +105,8 @@ vec4 position(mat4 projection, mat4 transform, vec4 vertex) {
 
   //Trials scaled
   vec4 wave0 = vec4(1.0, 1.0, 0.06, 0.64);
-  vec4 wave1 = vec4(1.0, 0.2, 0.03, 0.31);
+  // vec4 wave1 = vec4(1.0, 0.2, 0.03, 0.31);
+  vec4 wave1 = vec4(1.0, 0.2, 0.03, 0.02);
   vec4 wave2 = vec4(1.0, 0.6, 0.06*0.8, 0.02); //make it a uniform
   vec4 wave3 = vec4(1.0, 1.3, 0.06*0.31, 0.03); //make it a uniform
   
@@ -121,14 +125,14 @@ vec4 position(mat4 projection, mat4 transform, vec4 vertex) {
 
   p += gerstnerwave(wave1, gridpoint, tangent, binormal, 0.3);
   p += gerstnerwave(wave2, gridpoint, tangent, binormal, 0.5);
-  p += gerstnerwave(wave3, gridpoint, tangent, binormal, 0.6);
-  p += gerstnerwave(wave0, gridpoint, tangent, binormal, 0.2);
-  p += gerstnerwave(wave4, gridpoint, tangent, binormal, 0.5);
-  p += gerstnerwave(wave5, gridpoint, tangent, binormal, 1.0);
-  p += gerstnerwave(wave6, gridpoint, tangent, binormal, 0.5);
+  // p += gerstnerwave(wave3, gridpoint, tangent, binormal, 0.6);
+  // p += gerstnerwave(wave0, gridpoint, tangent, binormal, 0.2);
+  // p += gerstnerwave(wave4, gridpoint, tangent, binormal, 0.5);
+  // p += gerstnerwave(wave5, gridpoint, tangent, binormal, 1.0);
+  // p += gerstnerwave(wave6, gridpoint, tangent, binormal, 0.5);
 
-  p += gerstnerwave(wave7, gridpoint, tangent, binormal, 0.6);
-  p += gerstnerwave(wave8, gridpoint, tangent, binormal, 0.5);
+  // p += gerstnerwave(wave7, gridpoint, tangent, binormal, 0.6);
+  // p += gerstnerwave(wave8, gridpoint, tangent, binormal, 0.5);
   // p += gerstnerwave(wave9, gridpoint, tangent, binormal);
   
   vec3 normal = normalize(cross(binormal, tangent));
